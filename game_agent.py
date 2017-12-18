@@ -264,18 +264,27 @@ class MinimaxPlayer(IsolationPlayer):
         best_move = (-1, -1)
 
         for m in game.get_legal_moves():
-            v = self.max_value(game.forecast_move(m), depth - 1)
+            v = self.min_value(game.forecast_move(m), depth - 1)
             
             if v > best_score:
                 best_score = v
                 best_move = m
         
         return best_move
-
+        
     def terminal_test(self, game, depth):
+        """Method takes game and depth as argument and determine if the current
+            state of the game and if the are no more legal moves or the depth is 0
+
+           return: bool (False if end, True if the search should continue)
+        """
         return not bool(game.get_legal_moves()) or depth <= 0
 
     def min_value(self, game, depth):
+        """Method takes part as min section of minimax algorythm
+
+           return: current level lowest score for min
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -290,6 +299,10 @@ class MinimaxPlayer(IsolationPlayer):
         return v
 
     def max_value(self, game, depth):
+        """Method takes part as max section of minimax algorythm
+
+           return: current level highest score for max
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -302,8 +315,8 @@ class MinimaxPlayer(IsolationPlayer):
             v = max(v, self.min_value(game.forecast_move(m), depth - 1))
 
         return v
+        
     
-
 class AlphaBetaPlayer(IsolationPlayer):
     """Game-playing agent that chooses a move using iterative deepening minimax
     search with alpha-beta pruning. You must finish and test this player to
@@ -411,9 +424,19 @@ class AlphaBetaPlayer(IsolationPlayer):
         return best_move
 
     def terminal_test(self, game, depth):
+        """Method takes game and depth as argument and determine if the current
+            state of the game and if the are no more legal moves or the depth is 0
+
+           return: bool (False if end, True if the search should continue)
+        """
         return not bool(game.get_legal_moves()) or depth <= 0
     
     def min_value(self, game, depth, alfa, beta):
+        """Method takes part as min section of minimax algorythm, prune if the currently
+            found score is lower or equal alfa
+
+           return: current level lowest score for min
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
@@ -433,6 +456,11 @@ class AlphaBetaPlayer(IsolationPlayer):
         return v
 
     def max_value(self, game, depth, alfa, beta):
+        """Method takes part as max section of minimax algorythm, prune if the currently
+            found score is higher or equal beta
+
+           return: current level best score for max
+        """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
